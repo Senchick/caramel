@@ -17,9 +17,9 @@ dependencies {
     implementation(project(":data-desktop"))
 
     implementation("io.insert-koin:koin-core:3.4.3")
-    implementation("io.insert-koin:koin-annotations:3.4.3")
+    implementation("io.insert-koin:koin-annotations:1.2.2")
     implementation("io.insert-koin:koin-compose:1.0.4")
-    ksp("io.insert-koin:koin-ksp-compiler:3.4.3")
+    ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
 }
 
 compose.desktop {
