@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'kotlin-kapt'
 }
 
 java {
@@ -10,4 +11,6 @@ java {
 dependencies {
     implementation project(path: ":domain")
 
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 }

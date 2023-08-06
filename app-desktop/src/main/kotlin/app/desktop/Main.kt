@@ -23,7 +23,6 @@ fun App() {
         }) {
             Text(text)
         }
-
     }
 }
 

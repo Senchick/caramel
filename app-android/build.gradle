@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'io.gitlab.arturbosch.detekt'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -47,9 +48,9 @@ android {
     }
 
     packaging {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
+        resources.excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        resources.merges += "META-INF/LICENSE.md"
+        resources.merges += "META-INF/LICENSE-notice.md"
     }
 
     packagingOptions {
@@ -61,42 +62,57 @@ dependencies {
     implementation project(path: ":domain")
     implementation project(path: ':data-android')
 
-    implementation platform('androidx.compose:compose-bom:2023.06.01')
+    implementation platform(libs.compose.bom)
 
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation libs.core.ktx
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.activity.compose
 
-    implementation 'androidx.compose.ui:ui:1.4.3'
-    implementation 'androidx.compose.ui:ui-graphics:1.4.3'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.4.3'
-    implementation 'androidx.compose.material3:material3:1.1.1'
+    implementation libs.ui
+    implementation libs.ui.graphics
+    implementation libs.ui.tooling.preview
+    implementation libs.material3
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
+    implementation libs.lifecycle.viewmodel.compose
 
-    implementation 'androidx.compose.material:material-icons-core:1.4.3'
-    implementation 'androidx.compose.material:material-icons-extended:1.4.3'
-    implementation 'androidx.compose.material3:material3-window-size-class:1.1.1'
+    implementation libs.material.icons.core
+    implementation libs.material.icons.extended
+    implementation libs.material3.windowSizeClass
 
-    implementation "com.google.dagger:hilt-android:2.47"
-    kapt "com.google.dagger:hilt-compiler:2.47"
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+    implementation libs.hilt.navigation.compose
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation libs.kotlinx.coroutines.android
 
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation "io.mockk:mockk:1.13.5"
-    testImplementation "io.mockk:mockk-android:1.13.5"
-    testImplementation "io.mockk:mockk-agent:1.13.5"
+    testImplementation libs.junit
+    testImplementation libs.mockk
+    testImplementation libs.mockk.android
+    testImplementation libs.mockk.agent
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation platform('androidx.compose:compose-bom')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    androidTestImplementation "io.mockk:mockk-android:1.13.5"
-    androidTestImplementation "io.mockk:mockk-agent:1.13.5"
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.ui.test.junit4
+    androidTestImplementation libs.mockk.android
+    androidTestImplementation libs.mockk.agent
 
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    debugImplementation libs.ui.tooling
+    debugImplementation libs.ui.test.manifest
+
+    detektPlugins libs.detekt.rules.compose
+    detektPlugins libs.detekt.formatting
+    detektPlugins libs.detekt.hbmartin.rules
+}
+
+detekt {
+    parallel = false
+    config.setFrom("$projectDir/config/detekt-android.yaml")
+    buildUponDefaultConfig = false
+    allRules = false
+    disableDefaultRuleSets = false
+    debug = false
+    ignoreFailures = false
+    basePath = projectDir
 }

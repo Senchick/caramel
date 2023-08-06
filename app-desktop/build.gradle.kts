@@ -1,25 +1,28 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    id("org.jetbrains.compose") version "1.5.0-beta01"
+    id("org.jetbrains.compose")
     kotlin("jvm")
-    id("com.google.devtools.ksp") version "1.9.0-1.0.13"
+    id("io.gitlab.arturbosch.detekt")
+    kotlin("kapt")
 }
 
 group = "com.caramel"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    implementation(compose.desktop.currentOs)
-    implementation("org.jetbrains.compose.material3:material3-desktop:1.5.0-beta01")
-
     implementation(project(":domain"))
     implementation(project(":data-desktop"))
 
-    implementation("io.insert-koin:koin-core:3.4.3")
-    implementation("io.insert-koin:koin-annotations:1.2.2")
-    implementation("io.insert-koin:koin-compose:1.0.4")
-    ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
+    implementation(compose.desktop.currentOs)
+    implementation(libs.material3.desktop)
+
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+
+    detektPlugins(libs.detekt.rules.compose)
+    detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.hbmartin.rules)
 }
 
 compose.desktop {
@@ -36,4 +39,15 @@ compose.desktop {
 
 sourceSets.main {
     java.srcDirs("build/generated/ksp/main/kotlin")
+}
+
+detekt {
+    parallel = true
+    config.setFrom("$projectDir/config/detekt-desktop.yaml")
+    buildUponDefaultConfig = false
+    allRules = false
+    disableDefaultRuleSets = false
+    debug = false
+    ignoreFailures = false
+    basePath = projectDir.absolutePath
 }

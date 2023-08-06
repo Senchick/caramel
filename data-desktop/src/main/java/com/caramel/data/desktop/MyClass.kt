@@ -1,3 +1,3 @@
 package com.caramel.data.desktop
 
-class MyClass
+class MyClass constructor()
